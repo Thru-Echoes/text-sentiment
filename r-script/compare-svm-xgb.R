@@ -75,7 +75,7 @@ Ytest <- y.50perc.data[-trainSet]
 ##### ??
 
 ################################################################################
-#### 3. XGB param list 
+#### 3. XGB param list
 ################################################################################
 # get 24feature XGB models...accuracy threshold at 0.5
 #load("submission/April28_24features_xgb_5accur.rda")
@@ -169,8 +169,8 @@ xgb.param4.train$bestInd
 
 SumModelGini <- function(solution, submission) {
     df = data.frame(solution = solution, submission = submission)
-    df <- df[order(df$submission, decreasing = TRUE),]
-    df$random = (1:nrow(df))/nrow(df)
+    df <- df[order(df$submission, decreasing = TRUE), ]
+    df$random = (1:nrow(df)) / nrow(df)
     totalPos <- sum(df$solution)
     df$cumPosFound <- cumsum(df$solution) # this will store the cumulative number of positive examples found (used for computing "Model Lorentz")
     df$Lorentz <- df$cumPosFound / totalPos # this will store the cumulative proportion of positive examples found ("Model Lorentz")
@@ -190,9 +190,7 @@ evalgini <- function(preds, dtrain) {
 }
 
 
-xgb.param4.trainMod <- xgb.train(params = param2, data = xgtrain, feval = evalgini, nround = num_rounds,
-                              print.ever.n = 20, watchlist = watchlist, early.stop.round = 50,
-                              maximize = TRUE)
+xgb.param4.trainMod <- xgb.train(params = param2, data = xgtrain, feval = evalgini, nround = num_rounds, print.ever.n = 20, watchlist = watchlist, early.stop.round = 50, maximize = TRUE)
 
 xgb.param4.trainMod$bestScore
 xgb.param4.trainMod$bestInd
@@ -210,13 +208,9 @@ paramFin <- list("objective" = "binary:logistic",
                "lambda" = 1,
                "alpha" = 0)
 
-xgb.fin.notMod <- xgb.train(params = paramFin, data = xgtrain, feval = evalgini, nround = 127,
-                                 print.ever.n = 20, watchlist = watchlist, early.stop.round = 50,
-                                 maximize = TRUE)
+xgb.fin.notMod <- xgb.train(params = paramFin, data = xgtrain, feval = evalgini, nround = 127, print.ever.n = 20, watchlist = watchlist, early.stop.round = 50, maximize = TRUE)
 
-xgb.fin.giniMod <- xgb.train(params = paramFin, data = xgtrain, feval = evalgini, nround = 131,
-                            print.ever.n = 20, watchlist = watchlist, early.stop.round = 50,
-                            maximize = TRUE)
+xgb.fin.giniMod <- xgb.train(params = paramFin, data = xgtrain, feval = evalgini, nround = 131, print.ever.n = 20, watchlist = watchlist, early.stop.round = 50, maximize = TRUE)
 
 xgb.fin.notMod.pred <- predict(xgb.fin.notMod, xgtest)
 
@@ -266,10 +260,7 @@ xgb.param3.yhat.binary <- (as.numeric(pred.param3 > 0.5) != Ytest)
 xgb.param3.yhat.median <- (as.numeric(pred.param3 > median(xgb.param3.yhat)) != Ytest)
 
 # compare results of 2 models to Y-actual
-compare.xgb <- data.frame(yhat_xgb1 = xgb.param1.yhat.binary,
-                                 yhat_xgb2 = xgb.param2.yhat.binary,
-                                 yhat_xgb3 = xgb.param3.yhat.binary,
-                                 yactual = Ytest)
+compare.xgb <- data.frame(yhat_xgb1 = xgb.param1.yhat.binary, yhat_xgb2 = xgb.param2.yhat.binary, yhat_xgb3 = xgb.param3.yhat.binary, yactual = Ytest)
 
 #compare.xgb.50perc <- data.frame(yhat_xgb1 = xgb.param1.yhat,
 #                                 yhat_xgb2 = xgb.param2.yhat,
